@@ -1,0 +1,373 @@
+<html>
+<head>
+<style>
+        table, th, td 
+        {
+            margin:10px 0;
+            border:solid 1px #333;
+            padding:2px 4px;
+            font:15px Verdana;
+        }
+        th {
+            font-weight:bold;
+        }
+		
+#loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid blue;
+  border-bottom: 16px solid blue;
+  width: 60px;
+  height: 60px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+  visibility:hidden;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+		
+		
+#search {
+    width: 130px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+}
+
+/* When the input field gets focus, change its width to 100% */
+#search:focus {
+    width: 100%;
+}
+.edit{
+    color: blue;
+}
+.edit:hover,.delete:hover{
+    color: black;
+}
+
+.delete{
+    color: red;
+}
+ 
+    </style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script>
+  
+  var script_url = "https://script.google.com/macros/s/AKfycbzSNOvIFnv6ynbFcWXku16fT36ZhSsmf8VesfCWi0W6sLdnMu0G/exec";
+  
+  // Make an AJAX call to Google Script
+  function insert_value() {
+    
+	$("#re").css("visibility","hidden");
+	 document.getElementById("loader").style.visibility = "visible";
+	$('#mySpinner').addClass('spinner');
+
+var id1=	$("#id").val();
+	var name= $("#name").val();
+	
+	
+    var url = script_url+"?callback=ctrlq&name="+name+"&id="+id1+"&action=insert";
+  
+
+    var request = jQuery.ajax({
+      crossDomain: true,
+      url: url ,
+      method: "GET",
+      dataType: "jsonp"
+    });
+
+	clearAll();
+  }
+
+
+  
+  
+ 
+  
+  
+  function update_value(){
+	$("#re").css("visibility","hidden");
+     document.getElementById("loader").style.visibility = "visible";
+	
+	
+var id1=	$("#id").val();
+	var name= $("#name").val();
+	
+	
+	
+    var url = script_url+"?callback=ctrlq&name="+name+"&id="+id1+"&action=update";
+  
+
+    var request = jQuery.ajax({
+      crossDomain: true,
+      url: url ,
+      method: "GET",
+      dataType: "jsonp"
+    });
+
+	clearAll();
+  }
+
+  
+ 
+  
+  
+  function delete_value(id){
+	$("#re").css("visibility","hidden");
+     document.getElementById("loader").style.visibility = "visible";
+	$('#mySpinner').addClass('spinner');
+	var id1= id //$("#id").val();
+	//var name= $("#name").val();
+	
+	
+    var url = script_url+"?callback=ctrlq&id="+id1+"&action=delete";
+  
+
+    var request = jQuery.ajax({
+      crossDomain: true,
+      url: url ,
+      method: "GET",
+      dataType: "jsonp"
+    });
+	clearAll();
+
+  }
+
+
+  
+  
+  // print the returned data
+  function ctrlq(e) {
+  
+	
+	$("#re").html(e.result);
+	$("#re").css("visibility","visible");
+	read_value();
+	
+  }
+  
+  var dataAll;
+	function GetData(data)
+	{
+	dataAll=data;
+	console.log(data);
+	var PriceperStiches = $("#name").val();
+	 
+	var r=dataAll.result.records[0];
+	var Area= r.Area;
+	
+	var PerMeterCal = PriceperStiches * (Area/1000) *(1/1000) ;
+	var kaliprice = r.Kali * r.KaliNo * PerMeterCal ;
+	var less1price = r.Less1 * r.Meter1 * PerMeterCal;
+	var less2price = r.Less2 * r.Meter2 * PerMeterCal;
+	
+	$("#KaliS").text(r.Kali);
+	$("#Less1S").text(r.Less1);
+	$("#Less2S").text(r.Less2);
+	
+	$("#KaliM").text(r.KaliNo);
+	$("#Less1M").text(r.Meter1);
+	$("#Less2M").text(r.Meter2);
+	
+	
+	$("#pricekali").text(kaliprice);
+	$("#less1kali").text(less1price);
+	$("#less2kali").text(less2price);
+	var finalprice = kaliprice + less1price + less2price;
+	
+	$("#FinalPrice").text(finalprice);
+	
+	
+	
+	document.getElementById("loader").style.visibility = "hidden";
+		$("#re").html(data);
+		$("#re").css("visibility","visible");
+	}
+  
+function read_value() {
+
+$("#re").css("visibility","hidden");
+   
+   document.getElementById("loader").style.visibility = "visible";
+   var id1= $("#id").val();
+ var url = script_url+"?callback=GetData&id="+id1+"&action=read";
+
+ var request = jQuery.ajax({
+      crossDomain: true,
+      url: url ,
+      method: "GET",
+      dataType: "jsonp"
+    });
+	clearAll();
+	}
+ /*
+$.getJSON(url, function (json) {
+
+    // Set the variables from the results array
+   
+   console.log(json);
+   /*
+  
+
+        // CREATE DYNAMIC TABLE.
+        var table = document.createElement("table");
+
+		
+
+        var header = table.createTHead();
+		var row = header.insertRow(0);     
+		var cell1 = row.insertCell(0);
+		var cell2 = row.insertCell(1);
+		var cell3 = row.insertCell(2);
+	
+		cell1.innerHTML = "<b>ID</b>";
+		cell2.innerHTML = "<b>Name</b>";
+		cell3.innerHTML = "<b>Actions</b>";
+        
+        // ADD JSON DATA TO THE TABLE AS ROWS.
+        for (var i = 0; i < json.records.length; i++) {
+
+            tr = table.insertRow(-1);
+				var tabCell = tr.insertCell(-1);
+                tabCell.innerHTML = json.records[i].ID;
+				tabCell = tr.insertCell(-1);
+				tabCell.innerHTML = json.records[i].NAME;
+				tabCell = tr.insertCell(-1);
+				tabCell.innerHTML="<span value='"+json.records[i].ID+"' class='edit'>EDIT</span><span value='"+json.records[i].ID+"' class='delete'>Delete</span>";
+				
+            }
+      
+
+        // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
+        var divContainer = document.getElementById("showData");
+        divContainer.innerHTML = "";
+        divContainer.appendChild(table);
+		document.getElementById("loader").style.visibility = "hidden";
+		$("#re").css("visibility","visible");
+    });
+	clearAll();
+	}*/
+  
+  </script>
+<script>
+$(function(){
+	$("body")
+	.on("click","span.edit",function(){
+		 
+		setToInput("ID",Columnvalue($(this),1));
+		setToInput("NAME",Columnvalue($(this),2));
+	})
+	.on("click","span.delete",function(){
+		 delete_value(Columnvalue($(this),1));
+		 read_value();
+		
+	});
+});
+
+function Columnvalue(element,colno)
+{
+	return element.closest('tr').find("td:nth-child("+colno+")").text();
+}
+
+function setToInput(inputname,value){
+
+	if(inputname=="ID")
+	{
+		$("#id").val(value);
+	}
+	else if(inputname=="NAME")
+	{
+		$("#name").val(value);
+	}
+
+}
+
+function clearAll(){
+//$("#id").val('');
+//$("#name").val('');
+
+}
+
+</script>
+
+  
+  
+</head>
+<body>
+<div align="center">
+
+
+
+<form >
+ID
+<input type = "text" name ="id" id="id">
+Name
+<input type = "text" name ="name" id="name">
+
+</form>
+
+<div id="loader"></div>
+
+<p id="re"></p>
+
+<!--<input type = "button"  id = "b1" onClick="insert_value()" value = "Insert" disabled></input>-->
+<input type="button" onclick="read_value()" value="Read" />
+<!--<input type="button" onclick="update_value()" value="Update" />
+<input type="button" onclick="delete_value()" value="Delete" />-->
+<!--<a href="https://docs.google.com/spreadsheets/d/1ysTrxh9PaJ80xpjfWsWHB0wTFm8Cm_5BriTcGy5D2B8/edit#gid=0" target="_blank">Click here to open Spread Sheet </a>-->
+<div id="showData">
+
+<table border="0" cellspacing="0" cellpadding="0">
+	<thead>
+		<tr> 
+			<th>Type</th>
+			<th>Stiches</th>
+			<th>No/Meter</th>
+			<th>Price</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Kali</td>
+			<td><span id="KaliS" ></span></td>
+			<td><span id="KaliM" ></span></td>
+			<td><span id="pricekali" ></span></td>
+		</tr>
+		<tr>
+			<td>Less1</td>
+			<td><span id="Less1S" ></span></td>
+			<td><span id="Less1M" ></span></td>
+			<td></span><span id="less1kali" ></span></td>
+		</tr>
+		<tr>
+			<td>Less2</td>
+			<td><span id="Less2S" ></span></td>
+			<td><span id="Less2M" ></span></td>
+			<td><span id="less2kali" ></span></td>
+		</tr>
+		<tr>
+			<td colspan="3">Final Price</td>
+			<td><span id="FinalPrice" ></span></td>
+		</tr>
+		
+	</tbody>
+</table>
+
+</div>
+</div>
+</body>
+
+	<input id="search" type="text" name="search" placeholder="Search..">
+	
+</div>
+
+</div>
+<html>
