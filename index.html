@@ -1,318 +1,60 @@
+<!DOCTYPE html>
+<!--
+    Copyright (c) 2012-2016 Adobe Systems Incorporated. All rights reserved.
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
 <html>
+
 <head>
-<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1,
-width=device-width, height=device-height, target-densitydpi=device-dpi" />
-<script type="text/javascript" src="cordova.js"></script>
-<script type="text/javascript">
-  app.initialize();
-</script>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' gap:; style-src 'self' 'unsafe-inline'; media-src *" />
+    <!-- Good default declaration:
+    * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+    * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+    * Disables use of eval() and inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+        * Enable inline JS: add 'unsafe-inline' to default-src
+        * Enable eval(): add 'unsafe-eval' to default-src
+    * Create your own at http://cspisawesome.com
+    -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" /> -->
 
-<style>
-        table, th, td 
-        {
-            margin:10px 0;
-            border:solid 1px #333;
-            padding:2px 4px;
-            font:15px Verdana;
-        }
-        th {
-            font-weight:bold;
-        }
-		
-#loader {
-  border: 16px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 16px solid blue;
-  border-bottom: 16px solid blue;
-  width: 60px;
-  height: 60px;
-  -webkit-animation: spin 2s linear infinite;
-  animation: spin 2s linear infinite;
-  visibility:hidden;
-}
-
-@-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-		
-		
-#search {
-    width: 130px;
-    -webkit-transition: width 0.4s ease-in-out;
-    transition: width 0.4s ease-in-out;
-}
-
-/* When the input field gets focus, change its width to 100% */
-#search:focus {
-    width: 100%;
-}
-.edit{
-    color: blue;
-}
-.edit:hover,.delete:hover{
-    color: black;
-}
-
-.delete{
-    color: red;
-}
- 
-    </style>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-<script>
-
-document.addEventListener('deviceready', this.onDeviceReady, false);
-
-onDeviceReady: function() {
-  app.receivedEvent('deviceready');
-},
-  // Update DOM on a Received Event
-receivedEvent: function(id) {
-  var parentElement = document.getElementById(id);
-  var listeningElement = parentElement.querySelector('.listening');
-  var receivedElement = parentElement.querySelector('.received');
-
-  listeningElement.setAttribute('style', 'display:none;');
-  receivedElement.setAttribute('style', 'display:block;');
-
-  console.log('Received Event: ' + id);
-}
-
-
-  
-  var script_url = "https://script.google.com/macros/s/AKfycbzrx4zDXkWqJEh7nEhNmCtDZ-JTLBEp167cAVFFVryMKA4XQo0/exec";
-  
-  // Make an AJAX call to Google Script
-  function insert_value() {
-    
-	$("#re").css("visibility","hidden");
-	 document.getElementById("loader").style.visibility = "visible";
-	$('#mySpinner').addClass('spinner');
-
-var id1=	$("#id").val();
-	var name= $("#name").val();
-	
-	
-    var url = script_url+"?callback=ctrlq&name="+name+"&id="+id1+"&action=insert";
-  
-
-    var request = jQuery.ajax({
-      crossDomain: true,
-      url: url ,
-      method: "GET",
-      dataType: "jsonp"
-    });
-
-	clearAll();
-  }
-
-
-  
-  
- 
-  
-  
-  function update_value(){
-	$("#re").css("visibility","hidden");
-     document.getElementById("loader").style.visibility = "visible";
-	
-	
-var id1=	$("#id").val();
-	var name= $("#name").val();
-	
-	
-	
-    var url = script_url+"?callback=ctrlq&name="+name+"&id="+id1+"&action=update";
-  
-
-    var request = jQuery.ajax({
-      crossDomain: true,
-      url: url ,
-      method: "GET",
-      dataType: "jsonp"
-    });
-
-	clearAll();
-  }
-
-  
- 
-  
-  
-  function delete_value(id){
-	$("#re").css("visibility","hidden");
-     document.getElementById("loader").style.visibility = "visible";
-	$('#mySpinner').addClass('spinner');
-	var id1= id //$("#id").val();
-	//var name= $("#name").val();
-	
-	
-    var url = script_url+"?callback=ctrlq&id="+id1+"&action=delete";
-  
-
-    var request = jQuery.ajax({
-      crossDomain: true,
-      url: url ,
-      method: "GET",
-      dataType: "jsonp"
-    });
-	clearAll();
-
-  }
-
-
-  
-  
-  // print the returned data
-  function ctrlq(e) {
-  
-	
-	$("#re").html(e.result);
-	$("#re").css("visibility","visible");
-	read_value();
-	
-  }
-  
-  
-
-  
-function read_value() {
-
-$("#re").css("visibility","hidden");
-   
-   document.getElementById("loader").style.visibility = "visible";
- var url = script_url+"?action=read";
-
-$.getJSON(url, function (json) {
-
-    // Set the variables from the results array
-   
-   
-  
-
-        // CREATE DYNAMIC TABLE.
-        var table = document.createElement("table");
-
-		
-
-        var header = table.createTHead();
-		var row = header.insertRow(0);     
-		var cell1 = row.insertCell(0);
-		var cell2 = row.insertCell(1);
-		var cell3 = row.insertCell(2);
-	
-		cell1.innerHTML = "<b>ID</b>";
-		cell2.innerHTML = "<b>Name</b>";
-		cell3.innerHTML = "<b>Actions</b>";
-        
-        // ADD JSON DATA TO THE TABLE AS ROWS.
-        for (var i = 0; i < json.records.length; i++) {
-
-            tr = table.insertRow(-1);
-				var tabCell = tr.insertCell(-1);
-                tabCell.innerHTML = json.records[i].ID;
-				tabCell = tr.insertCell(-1);
-				tabCell.innerHTML = json.records[i].NAME;
-				tabCell = tr.insertCell(-1);
-				tabCell.innerHTML="<span value='"+json.records[i].ID+"' class='edit'>EDIT</span><span value='"+json.records[i].ID+"' class='delete'>Delete</span>";
-				
-            }
-      
-
-        // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
-        var divContainer = document.getElementById("showData");
-        divContainer.innerHTML = "";
-        divContainer.appendChild(table);
-		document.getElementById("loader").style.visibility = "hidden";
-		$("#re").css("visibility","visible");
-    });
-	clearAll();
-	}
-  
-  </script>
-<script>
-$(function(){
-	$("body")
-	.on("click","span.edit",function(){
-		 
-		setToInput("ID",Columnvalue($(this),1));
-		setToInput("NAME",Columnvalue($(this),2));
-	})
-	.on("click","span.delete",function(){
-		 delete_value(Columnvalue($(this),1));
-		 read_value();
-		
-	});
-});
-
-function Columnvalue(element,colno)
-{
-	return element.closest('tr').find("td:nth-child("+colno+")").text();
-}
-
-function setToInput(inputname,value){
-
-	if(inputname=="ID")
-	{
-		$("#id").val(value);
-	}
-	else if(inputname=="NAME")
-	{
-		$("#name").val(value);
-	}
-
-}
-
-function clearAll(){
-$("#id").val('');
-$("#name").val('');
-
-}
-
-</script>
-
-  
-  
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <title>Hello World</title>
 </head>
+
 <body>
-<div align="center">
-
-<div id="deviceready" class="blink">
-  <p class="event listening">Connecting to Device</p>
-  <p class="event received">Device is Ready</p>
-</div>
-
-<form >
-ID
-<input type = "text" name ="id" id="id">
-Name
-<input type = "text" name ="name" id="name">
-
-</form>
-
-<div id="loader"></div>
-
-<p id="re"></p>
-
-<input type = "button"  id = "b1" onClick="insert_value()" value = "Insert"></input>
-<input type="button" onclick="read_value()" value="Read" />
-<input type="button" onclick="update_value()" value="Update" />
-<input type="button" onclick="delete_value()" value="Delete" />
-<!--<a href="https://docs.google.com/spreadsheets/d/1ysTrxh9PaJ80xpjfWsWHB0wTFm8Cm_5BriTcGy5D2B8/edit#gid=0" target="_blank">Click here to open Spread Sheet </a>-->
-<div id="showData"></div>
-</div>
+    <div class="app">
+        <h1>PhoneGap</h1>
+        <div id="deviceready" class="blink">
+            <p class="event listening">Connecting to Device</p>
+            <p class="event received">Device is Ready</p>
+        </div>
+    </div>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript">
+        app.initialize();
+    </script>
 </body>
 
-	<input id="search" type="text" name="search" placeholder="Search..">
-	
-</div>
-
-</div>
-<html>
+</html>
