@@ -61,7 +61,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 <script>
   
-  var script_url = "https://script.google.com/macros/s/AKfycbzSNOvIFnv6ynbFcWXku16fT36ZhSsmf8VesfCWi0W6sLdnMu0G/exec";
+  var script_url = "https://script.google.com/macros/s/AKfycbzrx4zDXkWqJEh7nEhNmCtDZ-JTLBEp167cAVFFVryMKA4XQo0/exec";
   
   // Make an AJAX call to Google Script
   function insert_value() {
@@ -154,67 +154,21 @@ var id1=	$("#id").val();
 	
   }
   
-  var dataAll;
-	function GetData(data)
-	{
-	dataAll=data;
-	console.log(data);
-	var PriceperStiches = $("#name").val();
-	 
-	var r=dataAll.result.records[0];
-	var Area= r.Area;
-	
-	var PerMeterCal = PriceperStiches * (Area/1000) *(1/1000) ;
-	var kaliprice = r.Kali * r.KaliNo * PerMeterCal ;
-	var less1price = r.Less1 * r.Meter1 * PerMeterCal;
-	var less2price = r.Less2 * r.Meter2 * PerMeterCal;
-	
-	$("#KaliS").text(r.Kali);
-	$("#Less1S").text(r.Less1);
-	$("#Less2S").text(r.Less2);
-	
-	$("#KaliM").text(r.KaliNo);
-	$("#Less1M").text(r.Meter1);
-	$("#Less2M").text(r.Meter2);
-	
-	
-	$("#pricekali").text(kaliprice);
-	$("#less1kali").text(less1price);
-	$("#less2kali").text(less2price);
-	var finalprice = kaliprice + less1price + less2price;
-	
-	$("#FinalPrice").text(finalprice);
-	
-	
-	
-	document.getElementById("loader").style.visibility = "hidden";
-		$("#re").html(data);
-		$("#re").css("visibility","visible");
-	}
+  
+
   
 function read_value() {
 
 $("#re").css("visibility","hidden");
    
    document.getElementById("loader").style.visibility = "visible";
-   var id1= $("#id").val();
- var url = script_url+"?callback=GetData&id="+id1+"&action=read";
+ var url = script_url+"?action=read";
 
- var request = jQuery.ajax({
-      crossDomain: true,
-      url: url ,
-      method: "GET",
-      dataType: "jsonp"
-    });
-	clearAll();
-	}
- /*
 $.getJSON(url, function (json) {
 
     // Set the variables from the results array
    
-   console.log(json);
-   /*
+   
   
 
         // CREATE DYNAMIC TABLE.
@@ -254,7 +208,7 @@ $.getJSON(url, function (json) {
 		$("#re").css("visibility","visible");
     });
 	clearAll();
-	}*/
+	}
   
   </script>
 <script>
@@ -291,8 +245,8 @@ function setToInput(inputname,value){
 }
 
 function clearAll(){
-//$("#id").val('');
-//$("#name").val('');
+$("#id").val('');
+$("#name").val('');
 
 }
 
@@ -318,50 +272,12 @@ Name
 
 <p id="re"></p>
 
-<!--<input type = "button"  id = "b1" onClick="insert_value()" value = "Insert" disabled></input>-->
+<input type = "button"  id = "b1" onClick="insert_value()" value = "Insert"></input>
 <input type="button" onclick="read_value()" value="Read" />
-<!--<input type="button" onclick="update_value()" value="Update" />
-<input type="button" onclick="delete_value()" value="Delete" />-->
+<input type="button" onclick="update_value()" value="Update" />
+<input type="button" onclick="delete_value()" value="Delete" />
 <!--<a href="https://docs.google.com/spreadsheets/d/1ysTrxh9PaJ80xpjfWsWHB0wTFm8Cm_5BriTcGy5D2B8/edit#gid=0" target="_blank">Click here to open Spread Sheet </a>-->
-<div id="showData">
-
-<table border="0" cellspacing="0" cellpadding="0">
-	<thead>
-		<tr> 
-			<th>Type</th>
-			<th>Stiches</th>
-			<th>No/Meter</th>
-			<th>Price</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>Kali</td>
-			<td><span id="KaliS" ></span></td>
-			<td><span id="KaliM" ></span></td>
-			<td><span id="pricekali" ></span></td>
-		</tr>
-		<tr>
-			<td>Less1</td>
-			<td><span id="Less1S" ></span></td>
-			<td><span id="Less1M" ></span></td>
-			<td></span><span id="less1kali" ></span></td>
-		</tr>
-		<tr>
-			<td>Less2</td>
-			<td><span id="Less2S" ></span></td>
-			<td><span id="Less2M" ></span></td>
-			<td><span id="less2kali" ></span></td>
-		</tr>
-		<tr>
-			<td colspan="3">Final Price</td>
-			<td><span id="FinalPrice" ></span></td>
-		</tr>
-		
-	</tbody>
-</table>
-
-</div>
+<div id="showData"></div>
 </div>
 </body>
 
